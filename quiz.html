@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Quiz | MasterLearn AI</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tutor.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        .quiz-question {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 18px;
+        }
+
+        .quiz-question h4 {
+            margin: 0 0 15px;
+            color: white;
+            font-size: 16px;
+        }
+
+        .quiz-option {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 13px 15px;
+            margin: 8px 0;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            background: #0b0f20;
+            color: #ddd;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .quiz-option:hover {
+            border-color: #8b5cf6;
+            background: rgba(139,92,246,0.1);
+        }
+
+        .quiz-option.selected {
+            border-color: #8b5cf6;
+            background: rgba(139,92,246,0.2);
+        }
+
+        .quiz-submit {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #7c3aed, #2563eb);
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .quiz-score {
+            text-align: center;
+            padding: 25px;
+            margin-top: 20px;
+            border-radius: 16px;
+            background: rgba(124,58,237,0.12);
+            border: 1px solid rgba(124,58,237,0.3);
+        }
+
+        .quiz-score h2 {
+            margin: 0 0 8px;
+            color: white;
+        }
+
+        .quiz-score p {
+            color: #cbd5e1;
+            margin: 0;
+        }
+    </style>
+</head>
+
+
+<body class="tutor-page">
+
+    <nav class="dashboard-nav">
+
+        <a href="dashboard.html" class="brand">
+            <div class="brand-logo">M</div>
+            <span>MasterLearn <small>AI</small></span>
+        </a>
+
+        <a href="dashboard.html" class="back-btn">
+            ← Dashboard
+        </a>
+
+    </nav>
+
+
+    <main class="tutor-main">
+
+        <section class="tutor-header">
+
+            <span class="section-label">
+                ✦ MASTERLEARN AI QUIZ
+            </span>
+
+            <h1>
+                Test your <span>knowledge.</span>
+            </h1>
+
+            <p>
+                Enter a topic and let AI create a quiz for you.
+            </p>
+
+        </section>
+
+
+        <section class="tutor-card">
+
+            <div class="tutor-card-top">
+
+                <div>
+                    <span class="ai-status">
+                        ● AI QUIZ GENERATOR ONLINE
+                    </span>
+
+                    <h2>Choose your topic</h2>
+                </div>
+
+                <div class="sparkle">✦</div>
+
+            </div>
+
+
+            <input
+                id="quizTopic"
+                type="text"
+                placeholder="Example: Photosynthesis"
+                style="
+                    display:block;
+                    width:100%;
+                    box-sizing:border-box;
+                    margin-top:25px;
+                    padding:16px;
+                    border:1px solid rgba(255,255,255,.1);
+                    border-radius:14px;
+                    background:#0b0f20;
+                    color:white;
+                    font:15px 'DM Sans', sans-serif;
+                    outline:none;
+                "
+            >
+
+
+            <div class="tutor-bottom">
+
+                <select id="quizLanguage">
+
+                    <option value="English">🇬🇧 English</option>
+                    <option value="Tamil">🇮🇳 Tamil</option>
+                    <option value="Hindi">🇮🇳 Hindi</option>
+                    <option value="Telugu">🇮🇳 Telugu</option>
+                    <option value="Malayalam">🇮🇳 Malayalam</option>
+
+                </select>
+
+
+                <button onclick="generateQuiz()">
+                    Generate Quiz →
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <section class="answer-card">
+
+            <div class="answer-heading">
+
+                <div class="answer-icon">
+                    ?
+                </div>
+
+                <div>
+                    <span>AI QUIZ</span>
+                    <h3>Your generated questions</h3>
+                </div>
+
+            </div>
+
+
+            <div id="quizResult" class="answer-content">
+
+                <div class="empty-answer">
+
+                    <div>✦</div>
+
+                    <p>
+                        Your AI quiz will appear here.
+                    </p>
+
+                    <small>
+                        Enter a topic above to get started.
+                    </small>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script>
+
+        let correctAnswers = [];
+        let selectedAnswers = {};
+
+
+        async function generateQuiz() {
+
+            const topic =
+                document.getElementById("quizTopic").value.trim();
+
+            const language =
+                document.getElementById("quizLanguage").value;
+
+            const result =
+                document.getElementById("quizResult");
+
+
+            if (!topic) {
+
+                alert("Please enter a topic.");
+
+                return;
+
+            }
+
+
+            result.innerHTML = `
+                <div class="demo-answer">
+                    🤖 MasterLearn AI is generating your quiz...
+                </div>
+            `;
+
+
+            try {
+
+                const response = await fetch("/api/quiz", {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        topic: topic,
+                        language: language
+                    })
+
+                });
+
+
+                const data = await response.json();
+
+
+                if (!response.ok) {
+                    throw new Error(data.error);
+                }
+
+
+                const safeQuiz = data.quiz
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;");
+
+
+                createInteractiveQuiz(safeQuiz);
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                result.innerHTML = `
+                    <div class="demo-answer">
+                        ❌ Quiz generation error. Please try again.
+                    </div>
+                `;
+
+            }
+
+        }
+
+
+        function createInteractiveQuiz(text) {
+
+            correctAnswers = [];
+            selectedAnswers = {};
+
+            const result =
+                document.getElementById("quizResult");
+
+
+            const lines = text
+                .replace(/<br>/g, "\n")
+                .split("\n")
+                .map(line => line.trim())
+                .filter(line => line);
+
+
+            let questions = [];
+            let current = null;
+
+
+            lines.forEach(line => {
+
+                const questionMatch =
+                    line.match(/^(\d+)\.\s*(.+)/);
+
+                const optionMatch =
+                    line.match(/^([A-D])\)\s*(.+)/);
+
+                const answerMatch =
+                    line.match(/^Answer:\s*([A-D])/i);
+
+
+                if (questionMatch) {
+
+                    if (current) {
+                        questions.push(current);
+                    }
+
+                    current = {
+                        number: questionMatch[1],
+                        question: questionMatch[2],
+                        options: [],
+                        answer: ""
+                    };
+
+                }
+
+                else if (optionMatch && current) {
+
+                    current.options.push({
+                        letter: optionMatch[1],
+                        text: optionMatch[2]
+                    });
+
+                }
+
+                else if (answerMatch && current) {
+
+                    current.answer =
+                        answerMatch[1].toUpperCase();
+
+                }
+
+            });
+
+
+            if (current) {
+                questions.push(current);
+            }
+
+
+            if (!questions.length) {
+
+                result.innerHTML = `
+                    <div class="demo-answer">
+                        ❌ Could not format the quiz. Please try again.
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            let html = "";
+
+
+            questions.forEach((q, index) => {
+
+                correctAnswers[index] = q.answer;
+
+
+                html += `
+                    <div class="quiz-question">
+
+                        <h4>
+                            ${q.number}. ${q.question}
+                        </h4>
+                `;
+
+
+                q.options.forEach(option => {
+
+                    html += `
+                        <button
+                            class="quiz-option"
+                            onclick="selectOption(${index}, '${option.letter}', this)"
+                        >
+                            <strong>${option.letter})</strong>
+                            ${option.text}
+                        </button>
+                    `;
+
+                });
+
+
+                html += `
+                    </div>
+                `;
+
+            });
+
+
+            html += `
+                <button
+                    class="quiz-submit"
+                    onclick="calculateScore()"
+                >
+                    Submit Quiz →
+                </button>
+
+                <div id="scoreBox"></div>
+            `;
+
+
+            result.innerHTML = html;
+
+        }
+
+
+        function selectOption(questionIndex, letter, button) {
+
+            selectedAnswers[questionIndex] = letter;
+
+
+            const questionBox =
+                button.parentElement;
+
+
+            const buttons =
+                questionBox.querySelectorAll(".quiz-option");
+
+
+            buttons.forEach(btn => {
+
+                btn.classList.remove("selected");
+
+            });
+
+
+            button.classList.add("selected");
+
+        }
+
+
+        function calculateScore() {
+
+            let score = 0;
+
+
+            correctAnswers.forEach((answer, index) => {
+
+                if (selectedAnswers[index] === answer) {
+                    score++;
+                }
+
+            });
+
+
+            const total =
+                correctAnswers.length;
+
+
+            const percentage =
+                Math.round((score / total) * 100);
+
+
+            let message;
+
+
+            if (percentage === 100) {
+                message = "🎉 Perfect score! Excellent work!";
+            }
+
+            else if (percentage >= 60) {
+                message = "👏 Good job! Keep learning!";
+            }
+
+            else {
+                message = "💪 Keep practicing! You can improve!";
+            }
+
+
+            document.getElementById("scoreBox").innerHTML = `
+                <div class="quiz-score">
+
+                    <h2>
+                        ${score} / ${total}
+                    </h2>
+
+                    <p>
+                        ${percentage}% — ${message}
+                    </p>
+
+                </div>
+            `;
+
+        }
+
+    </script>
+
+</body>
+
+</html>

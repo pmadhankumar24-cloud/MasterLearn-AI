@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | MasterLearn AI</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body class="dashboard-page">
+
+    <!-- NAVBAR -->
+    <nav class="dashboard-nav">
+
+        <div class="brand">
+            <div class="brand-logo">M</div>
+            <span>MasterLearn <small>AI</small></span>
+        </div>
+
+        <div class="nav-right">
+
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">U</div>
+
+                <div>
+                    <strong id="userName">Student</strong>
+                    <span>Student</span>
+                </div>
+            </div>
+
+            <button class="logout-btn" onclick="logout()">
+                Logout
+            </button>
+
+        </div>
+
+    </nav>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main">
+
+        <!-- WELCOME -->
+        <section class="dashboard-welcome">
+
+            <div>
+                <span class="section-label">YOUR LEARNING SPACE</span>
+
+                <h1>
+                    Hello, <span id="welcomeName">Student</span> 👋
+                </h1>
+
+                <p>
+                    What would you like to learn today?
+                </p>
+            </div>
+
+
+            <!-- LANGUAGE -->
+            <div class="language-box">
+
+                <label for="language">Learning Language</label>
+
+                <select id="language">
+                    <option value="English">🇬🇧 English</option>
+                    <option value="Tamil">🇮🇳 Tamil</option>
+                    <option value="Hindi">🇮🇳 Hindi</option>
+                    <option value="Telugu">🇮🇳 Telugu</option>
+                    <option value="Malayalam">🇮🇳 Malayalam</option>
+                </select>
+
+            </div>
+
+        </section>
+
+
+        <!-- AI BANNER -->
+        <section class="ai-banner">
+
+            <div class="ai-banner-content">
+
+                <span class="ai-label">
+                    ✦ MASTERLEARN AI
+                </span>
+
+                <h2>
+                    Your personal AI<br>
+                    learning companion.
+                </h2>
+
+                <p>
+                    Ask questions, understand difficult concepts,
+                    translate lessons and summarize your notes.
+                </p>
+
+                <a href="tutor.html" class="ai-button">
+                    Ask AI <span>→</span>
+                </a>
+
+            </div>
+
+
+            <div class="ai-glow">
+                ✦
+            </div>
+
+        </section>
+
+
+        <!-- TOOLS -->
+        <section class="learning-section">
+
+            <div class="section-heading">
+                <div>
+                    <span class="section-label">AI LEARNING TOOLS</span>
+
+                    <h2>
+                        Everything you need to learn.
+                    </h2>
+                </div>
+            </div>
+
+
+            <div class="tools-grid">
+
+                <!-- AI TUTOR -->
+                <a href="tutor.html" class="tool-card purple">
+
+                    <div class="tool-icon">
+                        ✦
+                    </div>
+
+                    <h3>AI Tutor</h3>
+
+                    <p>
+                        Ask anything and get simple,
+                        easy-to-understand explanations.
+                    </p>
+
+                    <span class="tool-link">
+                        Start Learning →
+                    </span>
+
+                </a>
+
+
+                <!-- TRANSLATOR -->
+                <a href="translate.html" class="tool-card blue">
+
+                    <div class="tool-icon">
+                        文
+                    </div>
+
+                    <h3>Smart Translator</h3>
+
+                    <p>
+                        Translate educational content
+                        into your preferred language.
+                    </p>
+
+                    <span class="tool-link">
+                        Translate →
+                    </span>
+
+                </a>
+
+
+                <!-- SUMMARIZER -->
+                <a href="summary.html" class="tool-card green">
+
+                    <div class="tool-icon">
+                        ≡
+                    </div>
+
+                    <h3>Notes Summarizer</h3>
+
+                    <p>
+                        Convert long notes into short,
+                        clear and useful summaries.
+                    </p>
+
+                    <span class="tool-link">
+                        Summarize →
+                    </span>
+
+                </a>
+
+
+                <!-- QUIZ -->
+                <a href="quiz.html" class="tool-card orange">
+
+                    <div class="tool-icon">
+                        ?
+                    </div>
+
+                    <h3>AI Quiz</h3>
+
+                    <p>
+                        Generate quizzes and test your
+                        understanding with AI.
+                    </p>
+
+                    <span class="tool-link">
+                        Take Quiz →
+                    </span>
+
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- JAVASCRIPT -->
+    <script src="script.js"></script>
+
+</body>
+</html>

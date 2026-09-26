@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Notes Summarizer | MasterLearn AI</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tutor.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body class="tutor-page">
+
+    <nav class="dashboard-nav">
+
+        <a href="dashboard.html" class="brand">
+            <div class="brand-logo">M</div>
+            <span>MasterLearn <small>AI</small></span>
+        </a>
+
+        <a href="dashboard.html" class="back-btn">
+            ← Dashboard
+        </a>
+
+    </nav>
+
+
+    <main class="tutor-main">
+
+        <section class="tutor-header">
+
+            <span class="section-label">
+                ✦ MASTERLEARN AI SUMMARIZER
+            </span>
+
+            <h1>
+                Make your notes <span>simpler.</span>
+            </h1>
+
+            <p>
+                Turn long notes into short, clear and useful summaries.
+            </p>
+
+        </section>
+
+
+        <section class="tutor-card">
+
+            <div class="tutor-card-top">
+
+                <div>
+                    <span class="ai-status">
+                        ● AI SUMMARIZER ONLINE
+                    </span>
+
+                    <h2>Enter your notes</h2>
+                </div>
+
+                <div class="sparkle">✦</div>
+
+            </div>
+
+
+            <textarea
+                id="summaryText"
+                placeholder="Paste your notes here..."
+            ></textarea>
+
+
+            <div class="tutor-bottom">
+
+                <select id="summaryLanguage">
+
+                    <option value="English">🇬🇧 English</option>
+                    <option value="Tamil">🇮🇳 Tamil</option>
+                    <option value="Hindi">🇮🇳 Hindi</option>
+                    <option value="Telugu">🇮🇳 Telugu</option>
+                    <option value="Malayalam">🇮🇳 Malayalam</option>
+
+                </select>
+
+
+                <button onclick="summarizeNotes()">
+                    Summarize →
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <section class="answer-card">
+
+            <div class="answer-heading">
+
+                <div class="answer-icon">
+                    ✦
+                </div>
+
+                <div>
+                    <span>AI SUMMARY</span>
+                    <h3>MasterLearn's summary</h3>
+                </div>
+
+            </div>
+
+
+            <div id="summaryResult" class="answer-content">
+
+                <div class="empty-answer">
+
+                    <div>✦</div>
+
+                    <p>
+                        Your summary will appear here.
+                    </p>
+
+                    <small>
+                        Enter your notes above to get started.
+                    </small>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script>
+
+        async function summarizeNotes() {
+
+            const text =
+                document.getElementById("summaryText").value.trim();
+
+            const language =
+                document.getElementById("summaryLanguage").value;
+
+            const result =
+                document.getElementById("summaryResult");
+
+
+            if (!text) {
+
+                alert("Please enter your notes.");
+
+                return;
+
+            }
+
+
+            result.innerHTML = `
+                <div class="demo-answer">
+                    🤖 MasterLearn AI is summarizing...
+                </div>
+            `;
+
+
+            try {
+
+                const response = await fetch("/api/summarize", {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        text: text,
+                        language: language
+                    })
+
+                });
+
+
+                const data = await response.json();
+
+
+                if (!response.ok) {
+                    throw new Error(data.error);
+                }
+
+
+                result.innerHTML = `
+                    <p>${data.summary.replace(/\n/g, "<br>")}</p>
+                `;
+
+
+            } catch (error) {
+
+                console.error(error);
+
+
+                result.innerHTML = `
+                    <div class="demo-answer">
+                        ❌ Summarization error. Please try again.
+                    </div>
+                `;
+
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>

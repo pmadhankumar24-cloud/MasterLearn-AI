@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Translator | MasterLearn AI</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tutor.css">
+</head>
+
+<body class="tutor-page">
+
+    <nav class="dashboard-nav">
+
+        <a href="dashboard.html" class="brand">
+            <div class="brand-logo">M</div>
+            <span>MasterLearn <small>AI</small></span>
+        </a>
+
+        <a href="dashboard.html" class="back-btn">
+            ← Dashboard
+        </a>
+
+    </nav>
+
+    <main class="tutor-main">
+
+        <section class="tutor-header">
+
+            <span class="section-label">
+                ✦ MASTERLEARN AI TRANSLATOR
+            </span>
+
+            <h1>
+                Translate <span>Anything.</span>
+            </h1>
+
+            <p>
+                Translate educational content into your preferred language.
+            </p>
+
+        </section>
+
+        <section class="tutor-card">
+
+            <div class="tutor-card-top">
+
+                <div>
+                    <span class="ai-status">
+                        ● AI TRANSLATOR ONLINE
+                    </span>
+
+                    <h2>Enter your text</h2>
+                </div>
+
+                <div class="sparkle">✦</div>
+
+            </div>
+
+            <textarea
+                id="translateText"
+                placeholder="Enter text to translate..."
+            ></textarea>
+
+            <div class="tutor-bottom">
+
+                <select id="translateLanguage">
+                    <option value="Tamil">🇮🇳 Tamil</option>
+                    <option value="English">🇬🇧 English</option>
+                    <option value="Hindi">🇮🇳 Hindi</option>
+                    <option value="Telugu">🇮🇳 Telugu</option>
+                    <option value="Malayalam">🇮🇳 Malayalam</option>
+                </select>
+
+                <button onclick="translateText()">
+                    Translate →
+                </button>
+
+            </div>
+
+        </section>
+
+        <section class="answer-card">
+
+            <div class="answer-heading">
+
+                <div class="answer-icon">✦</div>
+
+                <div>
+                    <span>AI TRANSLATION</span>
+                    <h3>Translated text</h3>
+                </div>
+
+            </div>
+
+            <div id="translationResult" class="answer-content">
+
+                <div class="empty-answer">
+                    <div>✦</div>
+                    <p>Your translation will appear here.</p>
+                    <small>Enter text above to get started.</small>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script>
+
+        async function translateText() {
+
+            const text =
+                document.getElementById("translateText").value.trim();
+
+            const language =
+                document.getElementById("translateLanguage").value;
+
+            const result =
+                document.getElementById("translationResult");
+
+            if (!text) {
+                alert("Please enter some text.");
+                return;
+            }
+
+            result.innerHTML = `
+                <div class="demo-answer">
+                    🤖 Translating...
+                </div>
+            `;
+
+            try {
+
+                const response = await fetch("/api/translate", {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        text: text,
+                        language: language
+                    })
+
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error);
+                }
+
+                result.innerHTML = `
+                    <p>${data.translation.replace(/\n/g, "<br>")}</p>
+                `;
+
+            } catch (error) {
+
+                console.error(error);
+
+                result.innerHTML = `
+                    <div class="demo-answer">
+                        ❌ Translation error. Please try again.
+                    </div>
+                `;
+
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>

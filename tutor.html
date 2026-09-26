@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Tutor | MasterLearn AI</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tutor.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body class="tutor-page">
+
+    <nav class="dashboard-nav">
+
+        <a href="dashboard.html" class="brand">
+            <div class="brand-logo">M</div>
+            <span>MasterLearn <small>AI</small></span>
+        </a>
+
+        <a href="dashboard.html" class="back-btn">
+            ← Dashboard
+        </a>
+
+    </nav>
+
+
+    <main class="tutor-main">
+
+        <section class="tutor-header">
+
+            <span class="section-label">
+                ✦ MASTERLEARN AI TUTOR
+            </span>
+
+            <h1>
+                What do you want<br>
+                to <span>understand?</span>
+            </h1>
+
+            <p>
+                Ask anything. Get simple explanations powered by AI.
+            </p>
+
+        </section>
+
+
+        <section class="tutor-card">
+
+            <div class="tutor-card-top">
+
+                <div>
+                    <span class="ai-status">
+                        ● AI TUTOR ONLINE
+                    </span>
+
+                    <h2>Ask your question</h2>
+                </div>
+
+                <div class="sparkle">✦</div>
+
+            </div>
+
+
+            <textarea
+                id="question"
+                placeholder="Example: Explain photosynthesis in simple words..."
+            ></textarea>
+
+
+            <div class="tutor-bottom">
+
+                <select id="tutorLanguage">
+                    <option value="English">🇬🇧 English</option>
+                    <option value="Tamil">🇮🇳 Tamil</option>
+                    <option value="Hindi">🇮🇳 Hindi</option>
+                    <option value="Telugu">🇮🇳 Telugu</option>
+                    <option value="Malayalam">🇮🇳 Malayalam</option>
+                </select>
+
+                <button onclick="askTutor()">
+                    Ask AI →
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <section class="answer-card">
+
+            <div class="answer-heading">
+
+                <div class="answer-icon">✦</div>
+
+                <div>
+                    <span>AI RESPONSE</span>
+                    <h3>MasterLearn's explanation</h3>
+                </div>
+
+            </div>
+
+
+            <div id="answer" class="answer-content">
+
+                <div class="empty-answer">
+                    <div>✦</div>
+                    <p>Your AI explanation will appear here.</p>
+                    <small>Ask a question above to get started.</small>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script>
+
+        async function askTutor() {
+
+            const question =
+                document.getElementById("question").value.trim();
+
+            const language =
+                document.getElementById("tutorLanguage").value;
+
+            const answer =
+                document.getElementById("answer");
+
+
+            if (!question) {
+                alert("Please enter a question.");
+                return;
+            }
+
+
+            answer.innerHTML = `
+                <div class="demo-answer">
+                    🤖 MasterLearn AI is thinking...
+                </div>
+            `;
+
+
+            try {
+
+                const response = await fetch("/api/tutor", {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        question: question,
+                        language: language
+                    })
+
+                });
+
+
+                const data = await response.json();
+
+
+                if (!response.ok) {
+                    throw new Error(data.error);
+                }
+
+
+                answer.innerHTML = `
+                    <p>${data.answer.replace(/\n/g, "<br>")}</p>
+                `;
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                answer.innerHTML = `
+                    <div class="demo-answer">
+                        ❌ AI Tutor error. Please try again.
+                    </div>
+                `;
+
+            }
+
+        }
+
+    </script>
+
+</body>
+</html>
