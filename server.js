@@ -303,7 +303,7 @@ Answer: A
 // START SERVER
 // ===============================
 
-const server = app.listen(3000, "127.0.0.1", () => {
+const server=app.listen(process.env.PORT || 3000,"0.0.0.0",()=>{
 
     console.log("=================================");
     console.log("MASTERLEARN AI RUNNING");
